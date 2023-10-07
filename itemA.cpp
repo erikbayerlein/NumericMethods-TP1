@@ -4,10 +4,10 @@
 
 using namespace std;
 
-double newton_rapshon(double a3, double a2, double d0, double lambda, double epsilon);
+double newton_itemA(double a3, double a2, double d0, double lambda, double epsilon);
 double derivada_f(double d, double a3, double a2);
 double funcao_d(double d, double a3, double a2); 
-double newton_B(double a3, double a2, double d0, double lambda, double epsilon);
+double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon);
 
 int main(){
 
