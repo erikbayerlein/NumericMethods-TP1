@@ -3,5 +3,6 @@ project(NumericMethods_TP1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(NumericMethods_TP1 main.cpp
-        itemA.cpp)
+add_executable(NumericMethods_TP1
+        itemA.cpp
+        menu.cpp)
