@@ -112,9 +112,13 @@ double newton_itemC(double a3, double a2, double d0, double lambda, double epsil
     }
 
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+    int k = 0;
     while(abs(funcao_d(d0, a3, a2)) >= epsilon || abs(d1-d0) >= epsilon){
         d0 = d1;
         d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+        double fd = funcao_d(d0, a3, a2);
+        desenhar_tabela(k, d0, fd);
+        k +=1;
     }
 
     return d1;

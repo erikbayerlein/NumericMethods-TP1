@@ -8,6 +8,12 @@
 using namespace std;
 
 /**Observações:
+ * compilação:
+ * g++ -o <nome_do_executavel> menu.cpp itensA_B_C.cpp
+ * 
+ * executar ./<nome_do_executavel>
+ * 
+ * 
  * Fluxo 1 >> 2 = Executar NewtonItemA
  *  -> a funcao precisa do d0 para executar = ver linha 99
  * 
@@ -30,7 +36,8 @@ void menu() {
         cout << "Selecione a opcao desejada:\n\n";
         cout << "1: Testar resultado com entrada padrao a3 = 1, a2 = 1, d0 = 0,5, lambda = 0,05, e = 0,001\n\n";
         cout << "2: Testar resultado com N entradas diferentes para Lambda, a2 e a3 e uma precisao e especifica e\n\n";
-        cout << "3: Encerrar Programa\n\n";
+        cout << "3: Cálculo da raiz de f(d) por Newton-Raphson com derivada calculada pelo método da diferença finita\n\n";
+        cout << "4: Encerrar Programa\n\n";
 
         int opcao;
         cin >> opcao;
@@ -121,13 +128,21 @@ void menu() {
                 this_thread::sleep_for(chrono::seconds(2));
                 
             }
-        } else if (opcao == 3) {
+        } else if (opcao ==3){
+
+            // c) Implementar método numérico para achar derivada de f(d) e refazer item a.
+            newton_itemC(1, 1, 0.5, 0.05, 0.001, 0.0001);
+            this_thread::sleep_for(chrono::seconds(2));
+
+
+        }else if (opcao == 4) {
             cout << "Programa Finalizado" << endl;
             exit(0);
         }
         else {
             cout << "Escolha inválida. Tente novamente.\n";
         }
+
     }
 } 
 //Func p pegar as N entradas quando o metodo selecionado for o newton padrao
@@ -173,10 +188,6 @@ void EnterNewtonFL(int N, double e, double a2, double a3, double lambda){
         //Codigo do metodo selecionado para lambda, a2 e a3 da interação (FL)(Codigo do item B)
         }
 };
-
-
-
-
 
 // MUDAR MENU
 int main(){
