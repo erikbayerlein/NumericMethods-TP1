@@ -1,9 +1,27 @@
 #include <iostream>
+#include <iomanip> 
+#include <cmath>
 
 using namespace std;
 
 void EnterNewtonPadrao(int N, double e, double a2, double a3, double lambda);
 void EnterNewtonFL(int N, double e, double a2, double a3, double lambda);
+double newton_itemA(double a3, double a2, double d0, double epsilon);
+double derivada_f(double d, double a3, double a2);
+double funcao_d(double d, double a3, double a2); 
+double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon);
+double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(double, double, double), double h);
+double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double  h);
+void desenhar_tabela(int k, float x, float fx);
+
+/**Observações:
+ * Fluxo 1 >> 2 = Executar NewtonItemA
+ *  -> a funcao precisa do d0 para executar = ver linha 82
+ * 
+ * Fluxo de Saída do programa
+ *  -> não está encerrando
+ * 
+*/
 
 void menu() {
     while (true) {
@@ -36,12 +54,18 @@ void menu() {
             double a2 = 1, a3 = 1, d0 = 0.5, e = 0.001, lambda = 0.05;
             //SubMenu
             if (opcao1 == 1) {
-                cout << "Metodo Newton padrao; Entrada padrao";
+                cout << "Metodo Newton padrao; Entrada padrao" << endl;
+                
                 //codigo do item A entrada padrao
+                // newton_itemA( a3,  a2,  d0,  epsilon);
+                newton_itemA(1, 1, 0.5, 0.001);
+                
             }
             else if (opcao1 == 2) {
                 cout << "Metodo Newton FL; Entrada padrao";
                 //Codigo do item B entrada padrao
+                // newton_itemB( a3,  a2,  d0, lambda, epsilon);
+                newton_itemB(1, 1, 0.5, 0.05, 0.001);
             }
             return;
         }
@@ -59,23 +83,62 @@ void menu() {
             //SubMenu
             if (opcao1 == 1) {
                 cout << "Metodo Newton padrao; Entrada N:";
-                EnterNewtonPadrao(N1, e1, a21, a31, lambda1);
+                //N
+                cout << "N: ";
+                cin >> N1;
+                //e
+                cout << "e: ";
+                cin >> e1;
+
+                for (int i = 0; i < N1; i++){
+                    //a2
+                    cout << "a2: " << endl; cin >> a21;
+                    //a3
+                    cout << "a3: " << endl; cin >> a31;
+                    //double newton_itemA(double a3, double a2, double d0, double epsilon);
+                    //**********************************************************************
+                    //OBS.: o enunciado diz: Desenvolva um sistema para calcular o valor de d 
+                    // de uma oscilação de um determinado balanço. Ele não dá o d0.
+                    // Escolhemos arbitrariamente d0=0.5 => colocar em discussao
+
+                    newton_itemA(a31, a21, 0.5, e1);
+                }
+                //cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+                //funcao
             }
             else if (opcao1 == 2) {
                 cout << "Metodo Newton FL; Entrada N";
-                EnterNewtonFL(N1, e1, a21, a31, lambda1);
-            }
+                //N
+                cout << "N: ";
+                cin >> N1;
+                //e
+                cout << "e: ";
+                cin >> e1;
+
+                
+                // cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+                    for (int i = 0; i < N1; i++) {
+                    //lambda
+                    cout << "lambda: "; cin >> lambda1;
+                    //a2
+                    cout << "a2: "; cin >> a21;
+                    //a3
+                    cout << "a3: "; cin >> a31;
+                    // **************  OBS.: O mesmo problema da linha 82 **********
+                    newton_itemB(a31, a21, 0.5, lambda1, e1);
+                    }
             return;
         }
         else if (opcao == 3) {
             cout << "Programa Finalizado";
-            return;
+            exit(0);
         }
         else {
             cout << "Escolha inválida. Tente novamente.\n";
         }
     }
-}
+} 
+} 
 //Func p pegar as N entradas quando o metodo selecionado for o newton padrao
 void EnterNewtonPadrao(int N, double e, double a2, double a3, double lambda){
     //N
@@ -119,6 +182,101 @@ void EnterNewtonFL(int N, double e, double a2, double a3, double lambda){
         //Codigo do metodo selecionado para lambda, a2 e a3 da interação (FL)(Codigo do item B)
         }
 };
+
+void desenhar_tabela(int k, float d, float fd) {
+    cout << setfill('-') << setw(34) << "-" << setfill(' ') << endl;
+    cout << setw(3) << k << " | " << setw(12) << d << " | " << setw(12) << fd << endl;
+}
+
+
+double newton_itemA(double a3, double a2, double d0, double epsilon){
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return d0;
+    }
+    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
+    int k = 0;
+    cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+    while(abs(funcao_d(d0, a3, a2) >= epsilon || abs(d1-d0) >= epsilon)){    
+        d0 = d1; 
+        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
+        double fx = funcao_d(d0, a3, a2);
+        desenhar_tabela(k, d0, fx);
+        k+=1;
+
+    }
+
+    return d1; 
+
+}
+
+
+//f(d) = a3d3 – 9a2 == 3a3d² - 9a2
+double derivada_f(double d, double a3, double a2){
+    return (3*a3*(pow(d,2))-9*a2);
+}
+
+//f(d) = a3d3 – 9a2d + 3
+double funcao_d(double d, double a3, double a2){
+    return (a3*(pow(d,3)) - 9*a2*d + 3);
+}
+
+double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon){
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return d0;
+    }
+    
+    if (derivada_f(d0, a3, a2) >= lambda){
+
+        double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));  
+        double derivada = derivada_f(d0, a3, a2);
+        int k =0;
+        // cabeçalho da tabela
+        cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+        while(abs(funcao_d(d0, a3, a2)) >= epsilon || abs(d1-d0) >= epsilon){
+            d0 = d1;
+            double fd = funcao_d(d0, a3, a2);
+        
+            if (derivada_f(d0, a3, a2) <= lambda){
+                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
+                desenhar_tabela(k, d0, fd);
+                k +=1;
+            } else {
+                derivada = derivada_f(d0, a3, a2);
+                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
+                desenhar_tabela(k, d0, fd);
+                k +=1;
+            }
+            
+        }
+
+        return d1;
+    }
+    
+    cout << "Erro! f'(d0) < lambda: ";
+    return derivada_f(d0, a3, a2);
+}
+
+// Calculo da derivada pelo método da diferença finita
+double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(double, double, double), double h){
+    return (func(d + h, a3, a2) - func(d, a3, a2)) / h;
+}
+
+// Implementação do Item C
+double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h){
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return d0;
+    }
+
+    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+    while(abs(funcao_d(d0, a3, a2)) >= epsilon || abs(d1-d0) >= epsilon){
+        d0 = d1;
+        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+    }
+
+    return d1;
+
+}
+
 
 // MUDAR MENU
 int main(){
