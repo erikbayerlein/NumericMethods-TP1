@@ -13,7 +13,7 @@ double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(
 double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double  h);
 void desenhar_tabela(int k, float x, float fx);
 
-//teste para A e B
+//teste para A, B e C
 
 // int main(){
 //     cout << fixed << setprecision(8);

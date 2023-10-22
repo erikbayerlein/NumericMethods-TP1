@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip> 
 #include <cmath>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -16,23 +18,24 @@ void desenhar_tabela(int k, float x, float fx);
 
 /**Observações:
  * Fluxo 1 >> 2 = Executar NewtonItemA
- *  -> a funcao precisa do d0 para executar = ver linha 82
+ *  -> a funcao precisa do d0 para executar = ver linha 99
  * 
- * Fluxo de Saída do programa
- *  -> não está encerrando
+ * Dados de saída: quadros resposta (com d e erro para cada a3 e a2 e l e método) e comparativo.
+      Isso é pra tabela que esta imprimindo? Precisamos fazer a funcao do calculo do erro 
+      relativo das respostas obtidas e adicionara coluna na tabela de saida (?)
  * 
 */
 
 void menu() {
     while (true) {
-    cout << "___  ___                  ______     _            _             _  \n";
-    cout << "|  \\/  |                  | ___ \\   (_)          (_)           | | \n";
-    cout << "| .  . | ___ _ __  _   _  | |_/ / __ _ _ __   ___ _ _ __   __ _| | \n";
-    cout << "| |\\/| |/ _ \\ '_ \\| | | | |  __/ '__| | '_ \\ / __| | '_ \\ / _` | | \n";
-    cout << "| |  | |  __/ | | | |_| | | |  | |  | | | | | (__| | |_) | (_| | | \n";
-    cout << "\\_|  |_|\\___|_| |_|\\__,_| \\_|  |_|  |_|_| |_|\\___|_| .__/ \\__,_|_| \n";
-    cout << "                                                   | |             \n";
-    cout << "                                                   |_|             \n";
+        cout << "___  ___                  ______     _            _             _  \n";
+        cout << "|  \\/  |                  | ___ \\   (_)          (_)           | | \n";
+        cout << "| .  . | ___ _ __  _   _  | |_/ / __ _ _ __   ___ _ _ __   __ _| | \n";
+        cout << "| |\\/| |/ _ \\ '_ \\| | | | |  __/ '__| | '_ \\ / __| | '_ \\ / _` | | \n";
+        cout << "| |  | |  __/ | | | |_| | | |  | |  | | | | | (__| | |_) | (_| | | \n";
+        cout << "\\_|  |_|\\___|_| |_|\\__,_| \\_|  |_|  |_|_| |_|\\___|_| .__/ \\__,_|_| \n";
+        cout << "                                                   | |             \n";
+        cout << "                                                   |_|             \n";
         cout << "Selecione a opcao desejada:\n\n";
         cout << "1: Testar resultado com entrada padrao a3 = 1, a2 = 1, d0 = 0,5, lambda = 0,05, e = 0,001\n\n";
         cout << "2: Testar resultado com N entradas diferentes para Lambda, a2 e a3 e uma precisao e especifica e\n\n";
@@ -59,15 +62,17 @@ void menu() {
                 //codigo do item A entrada padrao
                 // newton_itemA( a3,  a2,  d0,  epsilon);
                 newton_itemA(1, 1, 0.5, 0.001);
+                this_thread::sleep_for(chrono::seconds(2));
                 
             }
             else if (opcao1 == 2) {
-                cout << "Metodo Newton FL; Entrada padrao";
+                cout << "Metodo Newton FL; Entrada padrao" << endl;
                 //Codigo do item B entrada padrao
                 // newton_itemB( a3,  a2,  d0, lambda, epsilon);
                 newton_itemB(1, 1, 0.5, 0.05, 0.001);
+                this_thread::sleep_for(chrono::seconds(2));
             }
-            return;
+            
         }
         else if (opcao == 2) {
             cout << "N entradas diferentes para Lambda, a2 e a3 e uma precisao e especifica e\n\n";
@@ -82,31 +87,27 @@ void menu() {
             double e1, a21, a31, lambda1;
             //SubMenu
             if (opcao1 == 1) {
-                cout << "Metodo Newton padrao; Entrada N:";
-                //N
-                cout << "N: ";
-                cin >> N1;
-                //e
-                cout << "e: ";
-                cin >> e1;
+                cout << "Metodo Newton padrao selecionado. Informe o número (N) de opções para lambda. " << endl;
+                cout << "N: "; cin >> N1;
+                cout << "e: "; cin >> e1;
 
                 for (int i = 0; i < N1; i++){
                     //a2
                     cout << "a2: " << endl; cin >> a21;
                     //a3
                     cout << "a3: " << endl; cin >> a31;
-                    //double newton_itemA(double a3, double a2, double d0, double epsilon);
                     //**********************************************************************
-                    //OBS.: o enunciado diz: Desenvolva um sistema para calcular o valor de d 
-                    // de uma oscilação de um determinado balanço. Ele não dá o d0.
+                    //OBS.: o enunciado diz: "Desenvolva um sistema para calcular o valor de d 
+                    // de uma oscilação de um determinado balanço." 
+                    // Ele não dá o d0.
                     // Escolhemos arbitrariamente d0=0.5 => colocar em discussao
-
+                    
+                    //double newton_itemA(double a3, double a2, double d0, double epsilon);
                     newton_itemA(a31, a21, 0.5, e1);
                 }
+                this_thread::sleep_for(chrono::seconds(2));
                 //cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-                //funcao
-            }
-            else if (opcao1 == 2) {
+            } else if (opcao1 == 2) {
                 cout << "Metodo Newton FL; Entrada N";
                 //N
                 cout << "N: ";
@@ -115,29 +116,28 @@ void menu() {
                 cout << "e: ";
                 cin >> e1;
 
-                
                 // cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-                    for (int i = 0; i < N1; i++) {
-                    //lambda
-                    cout << "lambda: "; cin >> lambda1;
-                    //a2
-                    cout << "a2: "; cin >> a21;
-                    //a3
-                    cout << "a3: "; cin >> a31;
-                    // **************  OBS.: O mesmo problema da linha 82 **********
-                    newton_itemB(a31, a21, 0.5, lambda1, e1);
-                    }
-            return;
-        }
-        else if (opcao == 3) {
-            cout << "Programa Finalizado";
+                for (int i = 0; i < N1; i++) {
+                //lambda
+                cout << "lambda: "; cin >> lambda1;
+                //a2
+                cout << "a2: "; cin >> a21;
+                //a3
+                cout << "a3: "; cin >> a31;
+                // **************  OBS.: O mesmo problema da linha 82 **********
+                newton_itemB(a31, a21, 0.5, lambda1, e1);
+                }
+                this_thread::sleep_for(chrono::seconds(2));
+                
+            }
+        } else if (opcao == 3) {
+            cout << "Programa Finalizado" << endl;
             exit(0);
         }
         else {
             cout << "Escolha inválida. Tente novamente.\n";
         }
     }
-} 
 } 
 //Func p pegar as N entradas quando o metodo selecionado for o newton padrao
 void EnterNewtonPadrao(int N, double e, double a2, double a3, double lambda){
@@ -252,7 +252,7 @@ double newton_itemB(double a3, double a2, double d0, double lambda, double epsil
         return d1;
     }
     
-    cout << "Erro! f'(d0) < lambda: ";
+    cout << "Erro! f'(d0) < lambda " << endl;
     return derivada_f(d0, a3, a2);
 }
 
