@@ -2,16 +2,9 @@
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
+#include "itensA_B_C.h"
 
 using namespace std;
-
-double newton_itemA(double a3, double a2, double d0, double epsilon);
-double derivada_f(double d, double a3, double a2);
-double funcao_d(double d, double a3, double a2); 
-double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon);
-double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(double, double, double), double h);
-double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double  h);
-void desenhar_tabela(int k, float x, float fx);
 
 //teste para A, B e C
 
