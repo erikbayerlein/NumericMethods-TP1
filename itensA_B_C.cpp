@@ -27,6 +27,24 @@ using namespace std;
 
 // }
 
+
+double isolamento_intervalo(double a3, double a2, double a, double b){
+    double d0;
+    double fa = funcao_d(a, a3, a2);
+    double fb = funcao_d(b, a3, a2);
+
+    while (true){
+        double fa = funcao_d(a, a3, a2);
+        double fb = funcao_d(b, a3, a2);
+        if (fa*fb < 0){
+            return (a+b)/2;
+        }
+        a-=1;
+    }
+
+    return d0;
+}
+
 void desenhar_tabela(int k, float d, float fd) {
     cout << setfill('-') << setw(34) << "-" << setfill(' ') << endl;
     cout << setw(3) << k << " | " << setw(12) << d << " | " << setw(12) << fd << endl;

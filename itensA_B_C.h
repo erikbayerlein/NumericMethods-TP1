@@ -16,5 +16,6 @@ double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(
 
 double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h);
 
+double isolamento_intervalo(double a3, double a2, double a, double b);
 
 #endif //itensA_B_C_H

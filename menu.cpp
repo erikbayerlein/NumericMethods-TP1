@@ -61,7 +61,7 @@ void menu() {
                 // newton_itemA( a3,  a2,  d0,  epsilon);
                 newton_itemA(1, 1, 0.5, 0.001);
                 this_thread::sleep_for(chrono::seconds(2));
-                
+                    
             }
             else if (opcao1 == 2) {
                 cout << "Metodo Newton FL; Entrada padrao" << endl;
