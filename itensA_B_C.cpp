@@ -116,6 +116,18 @@ double newton_itemA2_raphson(double a3, double a2, double epsilon){
 
 }
 
+array <double,2> raiz_derivada(double a3, double a2){
+    double delta = (- 4*3*a3*(-9));
+
+    double x1 = (0 + sqrt(delta))/(2*3*a3);
+    double x2 = (0 - sqrt(delta))/(2*3*a3);
+
+    array<double, 2> raiz = {x1, x2};
+
+    return raiz;
+
+}
+
 
 //f(d) = a3d3 – 9a2 == 3a3d² - 9a2
 double derivada_f(double d, double a3, double a2){
