@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
+#include <algorithm>
 #include "itensA_B_C.h"
 
 using namespace std;
@@ -27,22 +28,44 @@ using namespace std;
 
 // }
 
+// retirar o "a" e o "b"
+double isolamento_intervalo(double a3, double a2){
 
-double isolamento_intervalo(double a3, double a2, double a, double b){
-    double d0;
-    double fa = funcao_d(a, a3, a2);
-    double fb = funcao_d(b, a3, a2);
+    /*
+    // RASCUNHO 1
+    double x0 = 0;
+    double fa;
+    double fb;
 
     while (true){
-        double fa = funcao_d(a, a3, a2);
-        double fb = funcao_d(b, a3, a2);
-        if (fa*fb < 0){
-            return (a+b)/2;
-        }
-        a-=1;
-    }
+        fa = funcao_d(a, a3, a2);
+        fb = funcao_d(b, a3, a2);
 
-    return d0;
+        if (fa*fb < 0){
+            x0 = (a+b)/2;
+            return x0;
+        }
+
+        x0 += 1;
+    }*/
+
+    // RASCUNHO 2
+
+    double a2new = -9*a2;
+    double a0 = 3;
+
+    double x = a2new/a3;
+    double x1 = a0/a3;
+
+    double raio;
+
+    if (max({x, x1}) < 0) {
+        return 1;
+    };
+
+    raio = 1 + max({x, x1});
+
+    return raio;
 }
 
 void desenhar_tabela(int k, float d, float fd) {
@@ -68,6 +91,28 @@ double newton_itemA(double a3, double a2, double d0, double epsilon){
     }
 
     return d1; 
+
+}
+
+double newton_itemA2_raphson(double a3, double a2, double epsilon){
+    double d0 = isolamento_intervalo(a3, a2)/2;
+
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return d0;
+    }
+    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
+    int k = 0;
+    cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+    while(abs(funcao_d(d0, a3, a2) >= epsilon || abs(d1-d0) >= epsilon)){
+        d0 = d1;
+        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
+        double fx = funcao_d(d0, a3, a2);
+        desenhar_tabela(k, d0, fx);
+        k+=1;
+
+    }
+
+    return d1;
 
 }
 
