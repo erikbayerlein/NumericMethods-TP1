@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <iomanip>
 #include <algorithm>
+#include <list>
+#include <array>
+
 #include "itensA_B_C.h"
 
 using namespace std;
@@ -27,6 +30,35 @@ using namespace std;
 //     cout << "C) Raiz: " << raizC << endl;
 
 // }
+
+// retorna uma lista com os chutes iniciais a serem feitos
+list<double> intervalos_raizes(double raio, double a3, double a2) {
+
+    list<double> d0s;
+    int sinal;
+    double aux;
+
+    if (funcao_d(-raio, a3, a2) < 0) {
+        sinal = -1;
+    } else {
+        sinal = 1;
+    }
+
+    for(double i = -raio; i<=raio; i++) {
+        if (funcao_d(i, a3, a2) < 0 && sinal > 0) {
+            sinal = -1;
+            aux = (i-1 + i)/2;
+            d0s.push_back(aux);
+        } else if (funcao_d(i, a3, a2) > 0 && sinal < 0) {
+            sinal = 1;
+            aux = (i-1 + i)/2;
+            d0s.push_back(aux);
+        }
+    }
+
+    return d0s;
+}
+
 
 // retirar o "a" e o "b"
 double isolamento_intervalo(double a3, double a2){
