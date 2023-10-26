@@ -60,28 +60,7 @@ list<double> intervalos_raizes(double raio, double a3, double a2) {
 }
 
 
-// retirar o "a" e o "b"
 double isolamento_intervalo(double a3, double a2){
-
-    /*
-    // RASCUNHO 1
-    double x0 = 0;
-    double fa;
-    double fb;
-
-    while (true){
-        fa = funcao_d(a, a3, a2);
-        fb = funcao_d(b, a3, a2);
-
-        if (fa*fb < 0){
-            x0 = (a+b)/2;
-            return x0;
-        }
-
-        x0 += 1;
-    }*/
-
-    // RASCUNHO 2
 
     double a2new = -9*a2;
     double a0 = 3;

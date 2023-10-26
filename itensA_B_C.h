@@ -25,6 +25,7 @@ bool diverge(double x, double fx);
 
 std::list<double> intervalos_raizes(double raio, double a3, double a2);
 
+bool diverge(double x, double fx);
 
 
 #endif //itensA_B_C_H
