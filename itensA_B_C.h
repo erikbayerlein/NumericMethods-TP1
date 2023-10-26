@@ -21,7 +21,10 @@ double isolamento_intervalo(double a3, double a2);
 
 double newton_itemA2_raphson(double a3, double a2, double epsilon);
 
+bool diverge(double x, double fx);
+
 std::list<double> intervalos_raizes(double raio, double a3, double a2);
+
 
 
 #endif //itensA_B_C_H
