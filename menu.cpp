@@ -24,6 +24,7 @@ using namespace std;
 */
 
 void menu() {
+    cout << fixed << setprecision(8);
     while (true) {
         cout << "___  ___                  ______     _            _             _  \n";
         cout << "|  \\/  |                  | ___ \\   (_)          (_)           | | \n";
@@ -101,7 +102,7 @@ void menu() {
                     // Escolhemos arbitrariamente d0=0.5 => colocar em discussao
                     
                     //double newton_itemA(double a3, double a2, double d0, double epsilon);
-                    newton_itemA(a31, a21, 0.5, e1);
+                    newton_itemA2_raphson(a31, a21, e1);
                 }
                 this_thread::sleep_for(chrono::seconds(2));
                 //cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;

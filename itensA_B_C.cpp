@@ -79,9 +79,24 @@ double isolamento_intervalo(double a3, double a2){
     return raio;
 }
 
-void desenhar_tabela(int k, float d, float fd) {
-    cout << setfill('-') << setw(34) << "-" << setfill(' ') << endl;
-    cout << setw(3) << k << " | " << setw(12) << d << " | " << setw(12) << fd << endl;
+void desenhar_tabela(int k, double d, double fd) {
+    std::cout << setfill('-') << setw(34) << "-" << setfill(' ') << endl;
+    std::cout << setw(3) << k << " | " << setw(12) << d << " | " << setw(12) << fd << endl;
+}
+
+
+// Conclusão: raiz calculada foi tal, em K passos, o erro obtido é E e pra esse valor o 
+// balanço quebra ou nao.
+void conclusao(double d, int k, double fd){
+    cout << "" << endl; 
+    if (d>0.3){
+        cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
+            << " passos, o erro que faz o método parar é " << fd  << " e o balanço pode quebrar"<< endl;
+    } else{
+        cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
+            << " passos, o erro que faz o método parar é " << fd  << " e o balanço nao quebra"<< endl;
+    }
+
 }
 
 
@@ -90,16 +105,18 @@ double newton_itemA(double a3, double a2, double d0, double epsilon){
         return d0;
     }
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-    int k = 0;
-    cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-    while(abs(funcao_d(d0, a3, a2) >= epsilon || abs(d1-d0) >= epsilon)){    
+    int k = 1;
+    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
+    while(abs(funcao_d(d0, a3, a2) >= epsilon)){    
         d0 = d1; 
         d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
         double fx = funcao_d(d0, a3, a2);
         desenhar_tabela(k, d0, fx);
         k+=1;
-
     }
+
+    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
 
     return d1; 
 
@@ -112,9 +129,10 @@ double newton_itemA2_raphson(double a3, double a2, double epsilon){
         return d0;
     }
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-    int k = 0;
-    cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-    while(abs(funcao_d(d0, a3, a2) >= epsilon || abs(d1-d0) >= epsilon)){
+    int k = 1;
+    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
+    while(abs(funcao_d(d0, a3, a2) >= epsilon)){
         d0 = d1;
         d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
         double fx = funcao_d(d0, a3, a2);
@@ -123,6 +141,7 @@ double newton_itemA2_raphson(double a3, double a2, double epsilon){
 
     }
 
+    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
     return d1;
 
 }
@@ -155,34 +174,35 @@ double newton_itemB(double a3, double a2, double d0, double lambda, double epsil
         return d0;
     }
     
-    if (derivada_f(d0, a3, a2) >= lambda){
+    if (abs(derivada_f(d0, a3, a2)) >= lambda){
 
         double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));  
         double derivada = derivada_f(d0, a3, a2);
-        int k =0;
+        int k =1;
         // cabeçalho da tabela
-        cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-        while(abs(funcao_d(d0, a3, a2)) >= epsilon || abs(d1-d0) >= epsilon){
+        std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+        desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
+        while(abs(funcao_d(d0, a3, a2)) >= epsilon){
             d0 = d1;
             double fd = funcao_d(d0, a3, a2);
         
-            if (derivada_f(d0, a3, a2) <= lambda){
-                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
-                desenhar_tabela(k, d0, fd);
-                k +=1;
-            } else {
+            if (abs(derivada_f(d0, a3, a2)) > lambda){
                 derivada = derivada_f(d0, a3, a2);
                 d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
                 desenhar_tabela(k, d0, fd);
                 k +=1;
-            }
-            
+            } else {
+                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
+                desenhar_tabela(k, d0, fd);
+                k +=1;
+            }            
         }
 
+        conclusao(d0, (k-1), funcao_d(d0, a3, a2));
         return d1;
     }
     
-    cout << "Erro! f'(d0) < lambda: ";
+    std::cout << "Erro! f'(d0) < lambda: "<< endl;
     return derivada_f(d0, a3, a2);
 }
 
@@ -198,8 +218,10 @@ double newton_itemC(double a3, double a2, double d0, double lambda, double epsil
     }
 
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
-    int k = 0;
-    while(abs(funcao_d(d0, a3, a2)) >= epsilon || abs(d1-d0) >= epsilon){
+    int k = 1;
+    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
+    while(abs(funcao_d(d0, a3, a2)) >= epsilon){
         d0 = d1;
         d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
         double fd = funcao_d(d0, a3, a2);
@@ -207,18 +229,19 @@ double newton_itemC(double a3, double a2, double d0, double lambda, double epsil
         k +=1;
     }
 
+    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
     return d1;
 
 }
 
 bool diverge(double x, double fx){
     if(!isfinite(x) || !isfinite(fx)){
-                                    cout << "   _____          __             .___           .___.__                          .__        \n";
-            cout << "  /     \\   _____/  |_  ____   __| _/____     __| _/|__|__  __ ___________  ____ |__|__ __  \n";
-            cout << " /  \\ /  \\_/ __ \\   __\\/  _ \\ / __ |/  _ \\   / __ | |  \\  \\/ // __ \\_  __ \\/ ___\\|  |  |  \\ \n";
-            cout << "/    Y    \\  ___/|  | (  <_> ) /_/ (  <_> ) / /_/ | |  |\\   /\\  ___/|  | \\/ /_/  >  |  |  / \n";
-            cout << "\\____|__  /\\___  >__|  \\____/\\____ |\\____/  \\____ | |__| \\_/  \\___  >__|  \\___  /|__|____/  \n";
-            cout << "        \\/     \\/                 \\/             \\/               \\/     /_____/           \n";
+                                    std::cout << "   _____          __             .___           .___.__                          .__        \n";
+            std::cout << "  /     \\   _____/  |_  ____   __| _/____     __| _/|__|__  __ ___________  ____ |__|__ __  \n";
+            std::cout << " /  \\ /  \\_/ __ \\   __\\/  _ \\ / __ |/  _ \\   / __ | |  \\  \\/ // __ \\_  __ \\/ ___\\|  |  |  \\ \n";
+            std::cout << "/    Y    \\  ___/|  | (  <_> ) /_/ (  <_> ) / /_/ | |  |\\   /\\  ___/|  | \\/ /_/  >  |  |  / \n";
+            std::cout << "\\____|__  /\\___  >__|  \\____/\\____ |\\____/  \\____ | |__| \\_/  \\___  >__|  \\___  /|__|____/  \n";
+            std::cout << "        \\/     \\/                 \\/             \\/               \\/     /_____/           \n";
         return true;
     }
     return false;
