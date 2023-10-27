@@ -108,7 +108,7 @@ double newton_itemA(double a3, double a2, double d0, double epsilon){
     int k = 1;
     std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
     desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
-    while(abs(funcao_d(d0, a3, a2) >= epsilon)){    
+    while(abs(funcao_d(d0, a3, a2)) >= epsilon){    
         d0 = d1; 
         d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
         double fx = funcao_d(d0, a3, a2);
