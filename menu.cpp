@@ -68,7 +68,7 @@ void menu() {
                 cout << "Metodo Newton FL; Entrada padrao" << endl;
                 //Codigo do item B entrada padrao
                 // newton_itemB( a3,  a2,  d0, lambda, epsilon);
-                newton_itemB(1, 1, 0.5, 0.05, 0.001);
+                newton_itemB_entrada_padrao(1, 1, 0.5, 0.05, 0.001);
                 this_thread::sleep_for(chrono::seconds(2));
             }
             
@@ -117,19 +117,19 @@ void menu() {
 
                 // cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
                 for (int i = 0; i < N1; i++) {
-                //lambda
-                cout << "lambda: "; cin >> lambda1;
-                //a2
-                cout << "a2: "; cin >> a21;
-                //a3
-                cout << "a3: "; cin >> a31;
-                // **************  OBS.: O mesmo problema da linha 82 **********
-                newton_itemB(a31, a21, 0.5, lambda1, e1);
+                    //lambda
+                    cout << "lambda: "; cin >> lambda1;
+                    //a2
+                    cout << "a2: "; cin >> a21;
+                    //a3
+                    cout << "a3: "; cin >> a31;
+                    // **************  OBS.: O mesmo problema da linha 82 **********
+                    newton_itemB(a31, a21, lambda1, e1);
                 }
                 this_thread::sleep_for(chrono::seconds(2));
                 
             }
-        } else if (opcao ==3){
+        } else if (opcao == 3){
 
             // c) Implementar método numérico para achar derivada de f(d) e refazer item a.
             newton_itemC(1, 1, 0.5, 0.05, 0.001, 0.0001);

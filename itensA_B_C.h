@@ -11,19 +11,21 @@ double derivada_f(double d, double a3, double a2);
 
 double funcao_d(double d, double a3, double a2);
 
-double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon);
+void newton_itemB_entrada_padrao(double a3, double a2, double d0, double lambda, double epsilon);
+
+void newton_itemB(double a3, double a2, double lambda, double epsilon);
 
 double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(double, double, double), double h);
 
 double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h);
 
-double isolamento_intervalo(double a3, double a2);
+double raio_raizes(double a3, double a2);
 
-double newton_itemA2_raphson(double a3, double a2, double epsilon);
+void newton_itemA2_raphson(double a3, double a2, double epsilon);
 
 bool diverge(double x, double fx);
 
-std::list<double> intervalos_raizes(double raio, double a3, double a2);
+std::list<double> chutes_iniciais(double raio, double a3, double a2);
 
 bool diverge(double x, double fx);
 
