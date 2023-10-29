@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <list>
 #include <array>
+#include <string>
 
 #include "itensA_B_C.h"
 
@@ -32,7 +33,8 @@ using namespace std;
 // }
 
 // retorna uma lista com os chutes iniciais a serem feitos
-list<double> intervalos_raizes(double raio, double a3, double a2) {
+// retorna uma lista com os chutes iniciais a serem feitos
+list<double> chutes_iniciais(double raio, double a3, double a2) {
 
     list<double> d0s;
     int sinal;
@@ -60,7 +62,29 @@ list<double> intervalos_raizes(double raio, double a3, double a2) {
 }
 
 
-double isolamento_intervalo(double a3, double a2){
+//f(d) = a3d3 – 9a2 == 3a3d² - 9a2
+double derivada_f(double d, double a3, double a2){
+    return (3*a3*(pow(d,2))-9*a2);
+}
+
+//f(d) = a3d3 – 9a2d + 3
+double funcao_d(double d, double a3, double a2){
+    return (a3*(pow(d,3)) - 9*a2*d + 3);
+}
+
+array <double,2> raiz_derivada(double a3, double a2){
+    double delta = (- 4*3*a3*(-9));
+
+    double x1 = (0 + sqrt(delta))/(2*3*a3);
+    double x2 = (0 - sqrt(delta))/(2*3*a3);
+
+    array<double, 2> raiz = {x1, x2};
+
+    return raiz;
+
+}
+
+double raio_raizes(double a3, double a2){
 
     double a2new = -9*a2;
     double a0 = 3;
@@ -79,9 +103,19 @@ double isolamento_intervalo(double a3, double a2){
     return raio;
 }
 
-void desenhar_tabela(int k, double d, double fd) {
-    std::cout << setfill('-') << setw(34) << "-" << setfill(' ') << endl;
-    std::cout << setw(3) << k << " | " << setw(12) << d << " | " << setw(12) << fd << endl;
+void desenhar_tabela(int k, float d, float fd, TextRaiz t) {
+    std::string s;
+    if (t == CONTINUAR){
+        s = "absoluto(f(d)) maior ou igual a epsilon. Continuar!";
+    }
+    else {
+        if (t == PARAR){
+            s = "absoluto(f(d)) menor que epsilon. Parar!";
+        }
+    }
+
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    cout << "|" << setw(4) << k << "  | " << setw(11) << d << " | " << setw(12) << fd << " | " << setw(52) << s << "|" << endl;
 }
 
 
@@ -89,121 +123,15 @@ void desenhar_tabela(int k, double d, double fd) {
 // balanço quebra ou nao.
 void conclusao(double d, int k, double fd){
     cout << "" << endl; 
-    if (d>0.3){
-        cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
-            << " passos, o erro que faz o método parar é " << fd  << " e o balanço pode quebrar"<< endl;
+    if (d > 0.3){
+        cout << "CONCLUSAO: A raiz calculada e " << d << ", foi obtida em " << k
+            << " passos,\no erro que faz o metodo parar e " << fd  << " e o balanco pode quebrar.\n" << endl;
     } else{
-        cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
-            << " passos, o erro que faz o método parar é " << fd  << " e o balanço nao quebra"<< endl;
+        cout << "CONCLUSAO: A raiz calculada e " << d << ", foi obtida em " << k
+            << " passos,\no erro que faz o metodo parar e " << fd  << " e o balanco nao quebra.\n" << endl;
     }
+    cout << "#" << setfill('-') << setw(31) << "-" << "#  ITERACOES FINALIZADAS  #" << setw(31) << "-" << setfill(' ') << "#\n\n\n" << endl;
 
-}
-
-
-double newton_itemA(double a3, double a2, double d0, double epsilon){
-    if (abs(funcao_d(d0, a3, a2)) < epsilon){
-        return d0;
-    }
-    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-    int k = 1;
-    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
-    while(abs(funcao_d(d0, a3, a2)) >= epsilon){    
-        d0 = d1; 
-        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-        double fx = funcao_d(d0, a3, a2);
-        desenhar_tabela(k, d0, fx);
-        k+=1;
-    }
-
-    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
-
-    return d1; 
-
-}
-
-double newton_itemA2_raphson(double a3, double a2, double epsilon){
-    double d0 = isolamento_intervalo(a3, a2)/2;
-
-    if (abs(funcao_d(d0, a3, a2)) < epsilon){
-        return d0;
-    }
-    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-    int k = 1;
-    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
-    while(abs(funcao_d(d0, a3, a2) >= epsilon)){
-        d0 = d1;
-        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
-        double fx = funcao_d(d0, a3, a2);
-        desenhar_tabela(k, d0, fx);
-        k+=1;
-
-    }
-
-    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
-    return d1;
-
-}
-
-array <double,2> raiz_derivada(double a3, double a2){
-    double delta = (- 4*3*a3*(-9));
-
-    double x1 = (0 + sqrt(delta))/(2*3*a3);
-    double x2 = (0 - sqrt(delta))/(2*3*a3);
-
-    array<double, 2> raiz = {x1, x2};
-
-    return raiz;
-
-}
-
-
-//f(d) = a3d3 – 9a2 == 3a3d² - 9a2
-double derivada_f(double d, double a3, double a2){
-    return (3*a3*(pow(d,2))-9*a2);
-}
-
-//f(d) = a3d3 – 9a2d + 3
-double funcao_d(double d, double a3, double a2){
-    return (a3*(pow(d,3)) - 9*a2*d + 3);
-}
-
-double newton_itemB(double a3, double a2, double d0, double lambda, double epsilon){
-    if (abs(funcao_d(d0, a3, a2)) < epsilon){
-        return d0;
-    }
-    
-    if (abs(derivada_f(d0, a3, a2)) >= lambda){
-
-        double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));  
-        double derivada = derivada_f(d0, a3, a2);
-        int k =1;
-        // cabeçalho da tabela
-        std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-        desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
-        while(abs(funcao_d(d0, a3, a2)) >= epsilon){
-            d0 = d1;
-            double fd = funcao_d(d0, a3, a2);
-        
-            if (abs(derivada_f(d0, a3, a2)) > lambda){
-                derivada = derivada_f(d0, a3, a2);
-                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
-                desenhar_tabela(k, d0, fd);
-                k +=1;
-            } else {
-                d1 = d0 - (funcao_d(d0, a3, a2)/derivada);
-                desenhar_tabela(k, d0, fd);
-                k +=1;
-            }            
-        }
-
-        conclusao(d0, (k-1), funcao_d(d0, a3, a2));
-        return d1;
-    }
-    
-    std::cout << "Erro! f'(d0) < lambda: "<< endl;
-    return derivada_f(d0, a3, a2);
 }
 
 // Calculo da derivada pelo método da diferença finita
@@ -211,25 +139,278 @@ double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(
     return (func(d + h, a3, a2) - func(d, a3, a2)) / h;
 }
 
-// Implementação do Item C
-double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h){
+double newton_itemA(double a3, double a2, double d0, double epsilon){
     if (abs(funcao_d(d0, a3, a2)) < epsilon){
         return d0;
     }
 
-    double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
-    int k = 1;
-    std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
-    desenhar_tabela(0, d0, funcao_d(d0, a3, a2));
+    double fd = funcao_d(d0, a3, a2);
+    double d1 = d0 - fd/derivada_f(d0, a3, a2);
+    int k = 0;
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+    setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
     while(abs(funcao_d(d0, a3, a2)) >= epsilon){
+        desenhar_tabela(k, d0, fd, CONTINUAR);
         d0 = d1;
-        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+        fd = funcao_d(d0, a3, a2);
+        d1 = d0 - (fd/derivada_f(d0, a3, a2));
+        k+=1;
+    }
+
+    desenhar_tabela(k, d0, fd, PARAR);
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    conclusao(d0, k, funcao_d(d0, a3, a2));
+    return d1; 
+
+}
+
+void newton_itemA2_raphson(double a3, double a2, double epsilon){
+
+    cout << "\n- Funcao de entrada: f(d) = " << a3 << " * d^3 " << (-1) * 9*a2 << " * d + 3" << endl;
+    cout << "- Epsilon: " << epsilon << "\n" << endl;
+    double raio = raio_raizes(a3, a2);
+
+    list<double> d0s = chutes_iniciais(raio, a3, a2);
+
+    list<double>::iterator d0;
+    int n = 1;
+    for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {
+
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        std::cout << "#" << setw(57) << "Calculo para a raiz numero " << n << setw(32)  << "#" << endl;
+
+        if (*d0 <= 1) {
+
+            double d0Aux = *d0;
+
+            if (abs(funcao_d(d0Aux, a3, a2)) < epsilon) {
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
+                return;
+            }
+
+            double fd = funcao_d(d0Aux, a3, a2);
+            double d1 = d0Aux - fd / derivada_f(d0Aux, a3, a2);
+            int k = 0;
+            cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+            std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+            setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+            while (abs(funcao_d(d0Aux, a3, a2)) >= epsilon) {
+                desenhar_tabela(k, d0Aux, fd, CONTINUAR);
+                d0Aux = d1;
+                fd = funcao_d(d0Aux, a3, a2);
+                d1 = d0Aux - (fd / derivada_f(d0Aux, a3, a2));
+                k += 1;
+            }
+
+            desenhar_tabela(k, d0Aux, fd, PARAR);
+            cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+            conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
+        } else {
+
+            double d0Aux = *d0;
+
+            if (abs(funcao_d(d0Aux, a3, a2)) < epsilon) {
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
+                return;
+            }
+
+            cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+            double fd = funcao_d(d0Aux, a3, a2);
+            double d1 = d0Aux - fd / derivada_f(d0Aux, a3, a2);
+            int k = 0;
+
+            while (abs(funcao_d(d0Aux, a3, a2)) >= epsilon) {
+                d0Aux = d1;
+                fd = funcao_d(d0Aux, a3, a2);
+                d1 = d0Aux - (fd / derivada_f(d0Aux, a3, a2));
+                k += 1;
+            }
+
+            conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
+        }
+
+        n++;
+    }
+}
+
+
+
+void newton_itemB_entrada_padrao(double a3, double a2, double d0, double lambda, double epsilon){
+
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return;
+    }
+
+    if (abs(derivada_f(d0, a3, a2)) >= lambda){
+
         double fd = funcao_d(d0, a3, a2);
-        desenhar_tabela(k, d0, fd);
+        double d1 = d0 - (fd/derivada_f(d0, a3, a2));
+        double derivada = derivada_f(d0, a3, a2);
+        int k = 0;
+        // cabeçalho da tabela
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+        setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+        while(abs(funcao_d(d0, a3, a2)) >= epsilon){
+            desenhar_tabela(k, d0, fd, CONTINUAR);
+            d0 = d1;
+            fd = funcao_d(d0, a3, a2);
+
+            if (abs(derivada_f(d0, a3, a2)) > lambda){
+                derivada = derivada_f(d0, a3, a2);
+                d1 = d0 - (fd/derivada);
+                k +=1;
+            } else {
+                d1 = d0 - (fd/derivada);
+                k +=1;
+            }
+        }
+
+        desenhar_tabela(k, d0, funcao_d(d0, a3, a2), PARAR);
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        conclusao(d0, k, funcao_d(d0, a3, a2));
+        return;
+    }
+
+    std::cout << "Erro! f'(d0) < lambda: "<< endl;
+    return;
+
+}
+
+void newton_itemB(double a3, double a2, double lambda, double epsilon){
+
+    cout << "\n- Funcao de entrada: f(d) = " << a3 << " * d^3 " << (-1) * 9*a2 << " * d + 3" << endl;
+    cout << "- Epsilon: " << epsilon << endl;
+    cout << "- Lambda: " << lambda << "\n" << endl;
+
+    double raio = raio_raizes(a3, a2);
+
+    list<double> d0s = chutes_iniciais(raio, a3, a2);
+    list<double>::iterator d0;
+
+    int n = 1;
+    for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {
+
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        std::cout << "#" << setw(57) << "Calculo para a raiz numero " << n << setw(32)  << "#" << endl;
+
+        if (*d0 <= 1) {
+            double d0Aux = *d0;
+
+            if (abs(funcao_d(d0Aux, a3, a2)) < epsilon){
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
+                return;
+            }
+    
+            if (abs(derivada_f(d0Aux, a3, a2)) >= lambda){
+
+                double fd = funcao_d(d0Aux, a3, a2);
+                double d1 = d0Aux - (fd/derivada_f(d0Aux, a3, a2));
+                double derivada = derivada_f(d0Aux, a3, a2);
+                int k = 0;
+                // cabeçalho da tabela
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+                setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+                while(abs(funcao_d(d0Aux, a3, a2)) >= epsilon){
+                    desenhar_tabela(k, d0Aux, fd, CONTINUAR);
+                    d0Aux = d1;
+                    fd = funcao_d(d0Aux, a3, a2);
+
+                    if (abs(derivada_f(d0Aux, a3, a2)) > lambda){
+                        derivada = derivada_f(d0Aux, a3, a2);
+                        d1 = d0Aux - (fd/derivada);
+                        k +=1;
+                    } else {
+                        d1 = d0Aux - (fd/derivada);
+                        k +=1;
+                    }
+                }
+
+                desenhar_tabela(k, d0Aux, funcao_d(d0Aux, a3, a2), PARAR);
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
+                return;
+            }
+
+            std::cout << "Erro! f'(d0) < lambda: "<< endl;
+            return;
+        } else {
+            double d0Aux = *d0;
+
+            if (abs(funcao_d(d0Aux, a3, a2)) < epsilon){
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
+                return;
+            }
+
+            if (abs(derivada_f(d0Aux, a3, a2)) >= lambda){
+
+                cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+                double fd = funcao_d(d0Aux, a3, a2);
+                double d1 = d0Aux - (fd/derivada_f(d0Aux, a3, a2));
+                double derivada = derivada_f(d0Aux, a3, a2);
+                int k = 0;
+
+                while(abs(funcao_d(d0Aux, a3, a2)) >= epsilon){
+                    d0Aux = d1;
+                    fd = funcao_d(d0Aux, a3, a2);
+
+                    if (abs(derivada_f(d0Aux, a3, a2)) > lambda){
+                        derivada = derivada_f(d0Aux, a3, a2);
+                        d1 = d0Aux - (fd/derivada);
+                        k +=1;
+                    } else {
+                        d1 = d0Aux - (fd/derivada);
+                        k +=1;
+                    }
+                }
+
+                conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
+                return;
+            }
+
+            std::cout << "Erro! f'(d0) < lambda: "<< endl;
+            return;
+        }
+
+        n++;
+    }
+}
+
+
+// Implementação do Item C
+double newton_itemC(double a3, double a2, double d0, double epsilon, double h){
+    if (abs(funcao_d(d0, a3, a2)) < epsilon){
+        return d0;
+    }
+
+    double fd = funcao_d(d0, a3, a2);
+    double d1 = d0 - (fd/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+    int k = 0;
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+    setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+    while(abs(funcao_d(d0, a3, a2)) >= epsilon){
+        desenhar_tabela(k, d0, fd, CONTINUAR);
+        d0 = d1;
+        fd = funcao_d(d0, a3, a2);
+        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
         k +=1;
     }
 
-    conclusao(d0, (k-1), funcao_d(d0, a3, a2));
+    desenhar_tabela(k, d0, fd, PARAR);
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    conclusao(d0, k, funcao_d(d0, a3, a2));
     return d1;
 
 }
