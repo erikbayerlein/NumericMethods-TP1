@@ -3,7 +3,7 @@
 #include <cmath>
 #include <thread>
 #include <chrono>
-#include "menu.h"
+#include "itensA_B_C.h"
 
 using namespace std;
 
@@ -12,14 +12,6 @@ using namespace std;
  * g++ -o <nome_do_executavel> menu.cpp itensA_B_C.cpp
  * 
  * executar ./<nome_do_executavel>
- * 
- * 
- * Fluxo 1 >> 2 = Executar NewtonItemA
- *  -> a funcao precisa do d0 para executar = ver linha 99
- * 
- * Dados de saída: quadros resposta (com d e erro para cada a3 e a2 e l e método) e comparativo.
-      Isso é pra tabela que esta imprimindo? Precisamos fazer a funcao do calculo do erro 
-      relativo das respostas obtidas e adicionara coluna na tabela de saida (?)
  * 
 */
 
@@ -105,13 +97,6 @@ void menu() {
                     cout << "a2: " << endl; cin >> a21;
                     //a3
                     cout << "a3: " << endl; cin >> a31;
-                    //**********************************************************************
-                    //OBS.: o enunciado diz: "Desenvolva um sistema para calcular o valor de d 
-                    // de uma oscilação de um determinado balanço." 
-                    // Ele não dá o d0.
-                    // Escolhemos arbitrariamente d0=0.5 => colocar em discussao
-                    
-                    //double newton_itemA(double a3, double a2, double d0, double epsilon);
                     newton_itemA2_raphson(a31, a21, e1);
                 }
                 this_thread::sleep_for(chrono::seconds(2));
@@ -131,7 +116,6 @@ void menu() {
                     cout << "a2: "; cin >> a21;
                     //a3
                     cout << "a3: "; cin >> a31;
-                    // **************  OBS.: O mesmo problema da linha 82 **********
                     newton_itemB(a31, a21, lambda1, e1);
                 }
                 this_thread::sleep_for(chrono::seconds(2));
@@ -166,50 +150,6 @@ void menu() {
 
     }
 }
-
-//Func p pegar as N entradas quando o metodo selecionado for o newton padrao
-void EnterNewtonPadrao(int N, double e, double a2, double a3, double lambda){
-    //N
-    cout << "N: ";
-    cin >> N;
-    //e
-    cout << "e: ";
-    cin >> e;
-
-    //N a2, a3 e lambda
-    for (int i = 0; i < N; i++) {
-        //lambda
-        cout << "lambda: "; cin >> lambda;
-        //a2
-        cout << "a2: "; cin >> a2;
-        //a3
-        cout << "a3: "; cin >> a3;
-        
-        //Codigo do metodo selecionado para lambda, a2 e a3 da interação (Newton Padrao)(codigo do item A)
-        }
-};
-
-//Func pra pegar as entradas quando o metodos selecionado for o newton FL
-void EnterNewtonFL(int N, double e, double a2, double a3, double lambda){
-    //N
-    cout << "N: ";
-    cin >> N;
-    //e
-    cout << "e: ";
-    cin >> e;
-
-    //N a2, a3 e lambda
-    for (int i = 0; i < N; i++) {
-        //lambda
-        cout << "lambda: "; cin >> lambda;
-        //a2
-        cout << "a2: "; cin >> a2;
-        //a3
-        cout << "a3: "; cin >> a3;
-        
-        //Codigo do metodo selecionado para lambda, a2 e a3 da interação (FL)(Codigo do item B)
-        }
-};
 
 // MUDAR MENU
 int main(){

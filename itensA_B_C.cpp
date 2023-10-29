@@ -33,7 +33,6 @@ using namespace std;
 // }
 
 // retorna uma lista com os chutes iniciais a serem feitos
-// retorna uma lista com os chutes iniciais a serem feitos
 list<double> chutes_iniciais(double raio, double a3, double a2) {
 
     list<double> d0s;
@@ -294,9 +293,9 @@ void newton_itemB(double a3, double a2, double lambda, double epsilon){
     list<double> d0s = chutes_iniciais(raio, a3, a2);
     list<double>::iterator d0;
 
-    int n = 1;
+    int n = 0;
     for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {
-
+        n++;
         cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
         std::cout << "#" << setw(57) << "Calculo para a raiz numero " << n << setw(32)  << "#" << endl;
 
@@ -306,7 +305,7 @@ void newton_itemB(double a3, double a2, double lambda, double epsilon){
             if (abs(funcao_d(d0Aux, a3, a2)) < epsilon){
                 cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
                 cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
-                return;
+                continue;
             }
     
             if (abs(derivada_f(d0Aux, a3, a2)) >= lambda){
@@ -338,18 +337,18 @@ void newton_itemB(double a3, double a2, double lambda, double epsilon){
                 desenhar_tabela(k, d0Aux, funcao_d(d0Aux, a3, a2), PARAR);
                 cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
                 conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
-                return;
+                continue;
             }
 
             std::cout << "Erro! f'(d0) < lambda: "<< endl;
-            return;
+            continue;
         } else {
             double d0Aux = *d0;
 
             if (abs(funcao_d(d0Aux, a3, a2)) < epsilon){
                 cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
                 cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
-                return;
+                continue;
             }
 
             if (abs(derivada_f(d0Aux, a3, a2)) >= lambda){
@@ -375,14 +374,12 @@ void newton_itemB(double a3, double a2, double lambda, double epsilon){
                 }
 
                 conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
-                return;
+                continue;
             }
 
             std::cout << "Erro! f'(d0) < lambda: "<< endl;
-            return;
+            continue;
         }
-
-        n++;
     }
 }
 
