@@ -125,7 +125,7 @@ double newton_itemA(double a3, double a2, double d0, double epsilon){
 void newton_itemA2_raphson(double a3, double a2, double epsilon){
     double raio = raio_raizes(a3, a2);
 
-    list<double> d0s = chutes_iniciais(raio, 1, 1);
+    list<double> d0s = chutes_iniciais(raio, a3, a2);
 
     list<double>::iterator d0;
     for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {

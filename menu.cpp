@@ -26,6 +26,7 @@ using namespace std;
 void menu() {
     cout << fixed << setprecision(8);
     while (true) {
+        cout << "\n\n\n";
         cout << "___  ___                  ______     _            _             _  \n";
         cout << "|  \\/  |                  | ___ \\   (_)          (_)           | | \n";
         cout << "| .  . | ___ _ __  _   _  | |_/ / __ _ _ __   ___ _ _ __   __ _| | \n";
