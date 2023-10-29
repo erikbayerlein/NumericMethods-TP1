@@ -68,7 +68,7 @@ void menu() {
             else if (opcao1 == 3){
                 cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
                 cout << "#" << setw(5) << " " << "Metodo Newton padrao - Derivada pelo metodo da Diferenca finita - Entrada padrao" << setw(4) << " " << "#" <<endl;
-                newton_itemC(1, 1, 0.5, 0.001, 0.00001);
+                newton_itemC_entrada_padrao(1, 1, 0.5, 0.001, 0.00001);
                 this_thread::sleep_for(chrono::seconds(2));
             }
             
@@ -131,7 +131,7 @@ void menu() {
                     //a3
                     cout << "a3: " << endl; cin >> a31;
 
-                    newton_itemC(a31, a21, 0.5, e1, 0.00001);
+                    newton_itemC(a31, a21, e1, 0.00001);
                 }
                 this_thread::sleep_for(chrono::seconds(2));
             }

@@ -11,27 +11,6 @@
 
 using namespace std;
 
-//teste para A, B e C
-
-// int main(){
-//     cout << fixed << setprecision(8);
-
-//     // Item A - Cálculo da raiz de f(d) = a3d3 – 9a2d + 3 por Newton-Raphson normal
-//     double raizA = newton_itemA(1, 1, 0.5, 0.001);
-//     cout << "A) Raiz: " << raizA << endl;
-
-//     // Item B - Cálculo da raiz de f(d) = a3d3 – 9a2d + 3 por Newton-Raphson modificado
-//     cout << "B) ";
-//     double raizB = newton_itemB(1, 1, 0.5, 0.05, 0.001);
-//     cout << raizB << endl;
-
-//     // Item C - Cálculo da raiz de f(d) = a3d3 – 9a2d + 3 por Newton-Raphson
-//     // com derivada calculada pelo método da diferença finita
-//     double raizC = newton_itemC(1, 1, 0.5, 0.05, 0.001, 0.0001);
-//     cout << "C) Raiz: " << raizC << endl;
-
-// }
-
 // retorna uma lista com os chutes iniciais a serem feitos
 list<double> chutes_iniciais(double raio, double a3, double a2) {
 
@@ -385,7 +364,7 @@ void newton_itemB(double a3, double a2, double lambda, double epsilon){
 
 
 // Implementação do Item C
-double newton_itemC(double a3, double a2, double d0, double epsilon, double h){
+double newton_itemC_entrada_padrao(double a3, double a2, double d0, double epsilon, double h){
     if (abs(funcao_d(d0, a3, a2)) < epsilon){
         return d0;
     }
@@ -410,6 +389,70 @@ double newton_itemC(double a3, double a2, double d0, double epsilon, double h){
     conclusao(d0, k, funcao_d(d0, a3, a2));
     return d1;
 
+}
+
+void newton_itemC(double a3, double a2, double epsilon, double h){
+    double raio = raio_raizes(a3, a2);
+
+    list<double> d0s = chutes_iniciais(raio, a3, a2);
+    list<double>::iterator d0;
+
+    int n = 0;
+
+    for(d0 = d0s.begin(); d0 != d0s.end(); d0++) {
+        n++;
+        double d0Aux = *d0;
+
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        std::cout << "#" << setw(57) << "Calculo para a raiz numero " << n << setw(32)  << "#" << endl;
+
+        if (abs(funcao_d(d0Aux, a3, a2)) < epsilon){
+            cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+            cout << "\nf(" << d0Aux << ") = " << funcao_d(d0Aux, a3, a2) <<" já é menor que epsilon" << endl;
+            continue;
+        }
+
+        double fd = funcao_d(d0Aux, a3, a2);
+        double d1 = d0Aux - (fd/derivada_diferenca_finita(d0Aux, a3, a2, funcao_d, h));
+        int k = 0;
+
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+                 setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+        while(abs(funcao_d(d0Aux, a3, a2)) >= epsilon){
+            desenhar_tabela(k, d0Aux, fd, CONTINUAR);
+            d0Aux = d1;
+            fd = funcao_d(d0Aux, a3, a2);
+            d1 = d0Aux - (funcao_d(d0Aux, a3, a2)/derivada_diferenca_finita(d0Aux, a3, a2, funcao_d, h));
+            k +=1;
+        }
+
+        desenhar_tabela(k, d0Aux, fd, PARAR);
+        cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+        conclusao(d0Aux, k, funcao_d(d0Aux, a3, a2));
+    }
+/*
+    double fd = funcao_d(d0, a3, a2);
+    double d1 = d0 - (fd/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+    int k = 0;
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    std::cout << setw(4) << "|   k" << "  | " << setw(11) << "d" << " | " <<
+              setw(14) << "f(d) |" << setw(54) << "Analise |" << endl;
+
+    while(abs(funcao_d(d0, a3, a2)) >= epsilon){
+        desenhar_tabela(k, d0, fd, CONTINUAR);
+        d0 = d1;
+        fd = funcao_d(d0, a3, a2);
+        d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
+        k +=1;
+    }
+
+    desenhar_tabela(k, d0, fd, PARAR);
+    cout << setfill('-') << setw(91) << "-" << setfill(' ') << endl;
+    conclusao(d0, k, funcao_d(d0, a3, a2));
+    continue;
+*/
 }
 
 bool diverge(double x, double fx){
