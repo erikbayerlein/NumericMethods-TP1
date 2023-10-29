@@ -5,23 +5,23 @@
 
 void desenhar_tabela(int k, float d, float fd);
 
-double newton_itemA(double a3, double a2, double d0, double epsilon);
-
-double derivada_f(double d, double a3, double a2);
-
-double funcao_d(double d, double a3, double a2);
+void newton_itemA(double a3, double a2, double d0, double epsilon);
 
 void newton_itemB_entrada_padrao(double a3, double a2, double d0, double lambda, double epsilon);
 
 void newton_itemB(double a3, double a2, double lambda, double epsilon);
 
+void newton_itemA2_raphson(double a3, double a2, double epsilon);
+
+double derivada_f(double d, double a3, double a2);
+
+double funcao_d(double d, double a3, double a2);
+
 double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(double, double, double), double h);
 
-double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h);
+void newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h);
 
 double raio_raizes(double a3, double a2);
-
-void newton_itemA2_raphson(double a3, double a2, double epsilon);
 
 bool diverge(double x, double fx);
 

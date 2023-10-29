@@ -92,17 +92,27 @@ void conclusao(double d, int k, double fd){
     if (d>0.3){
         cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
             << " passos, o erro que faz o método parar é " << fd  << " e o balanço pode quebrar"<< endl;
-    } else{
+    } else if (d >0 && d <0.3){
         cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
             << " passos, o erro que faz o método parar é " << fd  << " e o balanço nao quebra"<< endl;
+    }
+
+    if (d < 0){
+        cout << "Conclusão: A raiz calculada é " << d << ", foi obtida em " << k 
+            << " passos, o erro que faz o método parar é " << fd  << ". Como a raiz é negativa desprezamos seu efeito para quebra do balanço"<< endl;
     }
 
 }
 
 
-double newton_itemA(double a3, double a2, double d0, double epsilon){
+void newton_itemA(double a3, double a2, double d0, double epsilon){
+    
+    if (diverge(d0, derivada_f(d0, a3, a2))){
+        return;
+    }
     if (abs(funcao_d(d0, a3, a2)) < epsilon){
-        return d0;
+        cout << "O erro que faz o método parar é " << funcao_d(d0, a3, a2) << endl;
+        return;
     }
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));
     int k = 1;
@@ -118,7 +128,7 @@ double newton_itemA(double a3, double a2, double d0, double epsilon){
 
     conclusao(d0, (k-1), funcao_d(d0, a3, a2));
 
-    return d1; 
+    return; 
 
 }
 
@@ -129,6 +139,9 @@ void newton_itemA2_raphson(double a3, double a2, double epsilon){
 
     list<double>::iterator d0;
     for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {
+        if (diverge(*d0, derivada_f(*d0, a3, a2))){
+            return;
+        }
         if (*d0 <= 1) {
             double d0Aux = *d0;
 
@@ -137,6 +150,7 @@ void newton_itemA2_raphson(double a3, double a2, double epsilon){
             }
             double d1 = d0Aux - (funcao_d(d0Aux, a3, a2)/derivada_f(d0Aux, a3, a2));
             int k = 1;
+            cout<< endl;
             std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
             desenhar_tabela(0, d0Aux, funcao_d(d0Aux, a3, a2));
             while(abs(funcao_d(d0Aux, a3, a2)) >= epsilon){
@@ -149,6 +163,7 @@ void newton_itemA2_raphson(double a3, double a2, double epsilon){
             }
 
             conclusao(d0Aux, (k-1), funcao_d(d0Aux, a3, a2));
+            cout<< endl;
         } else {
             double d0Aux = *d0;
 
@@ -158,9 +173,12 @@ void newton_itemA2_raphson(double a3, double a2, double epsilon){
 
             double d1 = d0Aux - (funcao_d(d0Aux, a3, a2)/derivada_f(d0Aux, a3, a2));
             int k = 1;
+            std::cout << setw(3) << "k" << " | " << setw(12) << "d" << " | " << setw(12) << "f(d)"<< endl;
+            desenhar_tabela(0, d0Aux, funcao_d(d0Aux, a3, a2));
             while(abs(funcao_d(d0Aux, a3, a2)) >= epsilon){
                 d0Aux = d1;
                 d1 = d0Aux - (funcao_d(d0Aux, a3, a2)/derivada_f(d0Aux, a3, a2));
+                desenhar_tabela(0, d0Aux, funcao_d(d0Aux, a3, a2));
                 k+=1;
             }
 
@@ -198,6 +216,9 @@ void newton_itemB_entrada_padrao(double a3, double a2, double d0, double lambda,
         return;
     }
     
+    if (diverge(d0, derivada_f(d0, a3, a2))){
+        return;
+    }
     if (abs(derivada_f(d0, a3, a2)) >= lambda){
 
         double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_f(d0, a3, a2));  
@@ -233,10 +254,13 @@ void newton_itemB_entrada_padrao(double a3, double a2, double d0, double lambda,
 void newton_itemB(double a3, double a2, double lambda, double epsilon){
     double raio = raio_raizes(a3, a2);
 
-    list<double> d0s = chutes_iniciais(raio, 1, 1);
+    list<double> d0s = chutes_iniciais(raio, a3, a2);
     list<double>::iterator d0;
 
     for (d0 = d0s.begin(); d0 != d0s.end(); d0++) {
+        if (diverge(*d0, derivada_f(*d0, a3, a2))){
+            return;
+        }   
         if (*d0 <= 1) {
             double d0Aux = *d0;
 
@@ -314,9 +338,10 @@ double derivada_diferenca_finita(double d, double a3, double a2, double (*func)(
 }
 
 // Implementação do Item C
-double newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h){
+void newton_itemC(double a3, double a2, double d0, double lambda, double epsilon, double h){
     if (abs(funcao_d(d0, a3, a2)) < epsilon){
-        return d0;
+        cout << "O erro que faz o método parar é " << funcao_d(d0, a3, a2) << endl;
+        return;
     }
 
     double d1 = d0 - (funcao_d(d0, a3, a2)/derivada_diferenca_finita(d0, a3, a2, funcao_d, h));
@@ -332,7 +357,7 @@ double newton_itemC(double a3, double a2, double d0, double lambda, double epsil
     }
 
     conclusao(d0, (k-1), funcao_d(d0, a3, a2));
-    return d1;
+    return;
 
 }
 
